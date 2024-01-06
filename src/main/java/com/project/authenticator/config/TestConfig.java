@@ -26,6 +26,7 @@ public class TestConfig implements CommandLineRunner{
 		Product p4 = new Product(null, "Carne",30.0);
 		
 		productRepository.saveAll(Arrays.asList(p1,p2,p3,p4));
+		
 	}	
 	
 
