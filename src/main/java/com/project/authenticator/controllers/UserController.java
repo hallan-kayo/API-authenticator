@@ -16,7 +16,7 @@ import com.project.authenticator.entities.Users;
 import com.project.authenticator.services.UserService;
 
 @RestController
-@RequestMapping(value = "users")
+@RequestMapping("users")
 public class UserController {
 	@Autowired
 	private UserService userService;
@@ -24,12 +24,5 @@ public class UserController {
 	@GetMapping
 	public List<Users> findAll(){
 		return this.userService.findAll();
-	}
-	
-	@PostMapping
-	public ResponseEntity<Users> save(@RequestBody Users user){
-		user = userService.save(user);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/id").buildAndExpand(user.getId()).toUri();
-		return ResponseEntity.created(uri).body(user);
 	}
 }

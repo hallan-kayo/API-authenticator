@@ -18,7 +18,7 @@ import com.project.authenticator.repositories.UserRepository;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/auth")
+@RequestMapping("auth")
 public class AuthenticatorController {
 
 	@Autowired
@@ -26,20 +26,23 @@ public class AuthenticatorController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
-	@PostMapping("/login")
-	public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
-		var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
-		var auth = this.authenticationManager.authenticate(usernamePassword);
-		
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+
+	
+	@PostMapping("login")
+	public ResponseEntity<Users> login(@RequestBody @Valid AuthenticationDTO data){
+		var token = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+		this.authenticationManager.authenticate(token);
 		return ResponseEntity.ok().build();
 	}
 	
-	@PostMapping("/register")
-	public ResponseEntity register(@RequestBody @Valid RegisterDTO data) {
+	@PostMapping("register")
+	public ResponseEntity<Users> register(@RequestBody @Valid RegisterDTO data) {
 		if(this.userRepository.findByLogin(data.login()) !=null ) 
 			return ResponseEntity.badRequest().build();
 		
-		String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+		String encryptedPassword = passwordEncoder.encode(data.password());
 		Users newUser = new Users(data.login(), encryptedPassword, data.role());
 		
 		this.userRepository.save(newUser);

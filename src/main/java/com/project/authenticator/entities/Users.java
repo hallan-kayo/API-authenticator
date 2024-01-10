@@ -18,12 +18,20 @@ import jakarta.persistence.Table;
 @Entity
 public class Users implements UserDetails{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String login;
 	private String password;
 	private Role role;
+	
+	public Users() {
+		
+	}
 	
 	public Users(Long id, String login, String password, Role role) {
 		this.id = id;
@@ -97,7 +105,7 @@ public class Users implements UserDetails{
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub
-		return null;
+		return password;
 	}
 	@Override
 	public String getUsername() {

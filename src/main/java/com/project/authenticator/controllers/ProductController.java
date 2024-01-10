@@ -16,7 +16,7 @@ import com.project.authenticator.entities.Product;
 import com.project.authenticator.services.ProductService;
 
 @RestController
-@RequestMapping(value = "/products")
+@RequestMapping("/products")
 public class ProductController {
 
 	@Autowired
