@@ -1,18 +1,17 @@
 package com.project.authenticator.entities;
 
-import org.springframework.security.core.userdetails.UserDetails;
-
-public enum Role{
+public enum UserRole{
 	ADMIN("admin"),
 	USER("user");
 	
 	private String role;
 	
-	Role(String role){
+	UserRole(String role){
 		this.role = role;
 	}
 	
 	String getRole() {
 		return role;
 	}
+	
 }

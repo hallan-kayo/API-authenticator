@@ -1,9 +1,12 @@
 package com.project.authenticator.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,24 +28,21 @@ public class AuthenticatorController {
 	private UserRepository userRepository;
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
 
 	
 	@PostMapping("login")
-	public ResponseEntity<Users> login(@RequestBody @Valid AuthenticationDTO data){
+	public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
 		var token = new UsernamePasswordAuthenticationToken(data.login(), data.password());
-		this.authenticationManager.authenticate(token);
+		var auth = this.authenticationManager.authenticate(token);
 		return ResponseEntity.ok().build();
 	}
 	
 	@PostMapping("register")
-	public ResponseEntity<Users> register(@RequestBody @Valid RegisterDTO data) {
+	public ResponseEntity register(@RequestBody @Valid RegisterDTO data) {
 		if(this.userRepository.findByLogin(data.login()) !=null ) 
 			return ResponseEntity.badRequest().build();
 		
-		String encryptedPassword = passwordEncoder.encode(data.password());
+		String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
 		Users newUser = new Users(data.login(), encryptedPassword, data.role());
 		
 		this.userRepository.save(newUser);

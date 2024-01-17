@@ -2,7 +2,6 @@ package com.project.authenticator.entities;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,8 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-@Table(name = "USERS")
 @Entity
+@Table(name = "USERS")
 public class Users implements UserDetails{
 
 	/**
@@ -27,20 +26,20 @@ public class Users implements UserDetails{
 	private Long id;
 	private String login;
 	private String password;
-	private Role role;
+	private UserRole role;
 	
 	public Users() {
 		
 	}
 	
-	public Users(Long id, String login, String password, Role role) {
+	public Users(Long id, String login, String password, UserRole role) {
 		this.id = id;
 		this.login = login;
 		this.password = password;
 		this.role = role;
 	}
 	
-	public Users(String login, String password, Role role) {
+	public Users(String login, String password, UserRole role) {
 		this.login = login;
 		this.password = password;
 		this.role = role;
@@ -62,51 +61,44 @@ public class Users implements UserDetails{
 		this.login = login;
 	}
 
-	public Role getRole() {
+	public UserRole getRole() {
 		return role;
 	}
 
-	public void setRole(Role role) {
+	public void setRole(UserRole role) {
 		this.role = role;
 	}
+	
+	
 
 	public void setPassword(String password) {
 		this.password = password;
 	}
 	
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return password;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Users other = (Users) obj;
-		return Objects.equals(id, other.id);
+	public String toString() {
+		return "Users [id=" + id + ", login=" + login + ", password=" + password + ", role=" + role + "]";
 	}
+
 
 	//verifica as roles dos usuários para permitir as requisições
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		if(this.role == Role.ADMIN) 
+		if(this.role.equals(UserRole.ADMIN)) {
 			return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), 
 				new SimpleGrantedAuthority("ROLE_USER"));
-		else
+		}
+		else {
 			return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+		}
 	}
-	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return password;
-	}
+	
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
